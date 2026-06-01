@@ -1,0 +1,17 @@
+{
+  "name": "suppfly",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev:web": "pnpm --filter suppfly-webui dev",
+    "dev:api": "dotnet watch --project apps/Suppfly.Api",
+    "dev": "concurrently \"pnpm dev:web\" \"pnpm dev:api\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.33.0",
+  "devDependencies": {
+    "concurrently": "^10.0.1"
+  }
+}
