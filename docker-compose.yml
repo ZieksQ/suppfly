@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:18.3-alpine3.23
+    container_name: suppfly-postgres
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    ports:
+      - "5434:5432"
+    restart: unless-stopped
+    networks:
+      - suppfly-network
+
+  redis:
+    image: redis:alpine
+    container_name: suppfly-redis
+    command: redis-server --appendonly yes --requiredpass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - suppfly-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  suppfly-network:
+    driver: bridge
