@@ -17,7 +17,8 @@ services:
   redis:
     image: redis:alpine
     container_name: suppfly-redis
-    command: redis-server --appendonly yes --requiredpass ${REDIS_PASSWORD}
+    environment:
+      - REDIS_ARGS=--appendonly yes --requirepass ${REDIS_PASSWORD:-devpass}
     volumes:
       - redis_data:/data
     ports:
