@@ -14,7 +14,7 @@ public class User : BaseEntity
     public UserStatus Status { get; set; }
     public DateTime? LastLoginAt { get; set; }
 
-    public Company Company { get; set; } = null;
+    public Company Company { get; set; } = null!;
 
     private User() { }
 
