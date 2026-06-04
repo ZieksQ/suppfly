@@ -1,13 +1,14 @@
-using MediatR;
 using Suppfly.Api.Domain.Enums;
-using Suppfly.Api.Shared;
 
 namespace Suppfly.Api.Features.Companies.CreateCompany;
 
-public record Command(
+public record Response(
+  Guid Id,
   string Name,
   string Slug,
   CompanyType Type,
   string? TaxId,
-  CompanyTier Tier
-) : IRequest<Result<Response>>;
+  CompanyStatus Status,
+  CompanyTier Tier,
+  DateTime CreatedAt
+);

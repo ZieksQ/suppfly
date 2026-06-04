@@ -1,6 +1,7 @@
 using Carter;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Diagnostics;
 using Suppfly.Api.Infrastructure.Persistence;
 using Suppfly.Api.Shared;
 
@@ -53,6 +54,29 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MigrateDb();
+// app.UseExceptionHandler(errorApp =>
+// {
+//   errorApp.Run(async context =>
+//   {
+//     var exception = context.Features
+//          .Get<IExceptionHandlerFeature>()?.Error;
+//
+//     if (exception is ValidationException validationEx)
+//     {
+//       context.Response.StatusCode = 400;
+//       context.Response.ContentType = "application/json";
+//
+//       var errors = validationEx.Errors
+//             .Select(e => new { field = e.PropertyName, message = e.ErrorMessage });
+//
+//       await context.Response.WriteAsJsonAsync(new { errors });
+//       return;
+//     }
+//
+//     context.Response.StatusCode = 500;
+//     await context.Response.WriteAsJsonAsync(new { error = "An unexpected error occurred." });
+//   });
+// });
 app.MapCarter();
 app.UseHttpsRedirection();
 app.UseCors("NextJsPolicy");

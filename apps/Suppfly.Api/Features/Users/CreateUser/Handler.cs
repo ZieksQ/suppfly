@@ -21,7 +21,7 @@ public class Handler : IRequestHandler<Command, Result<Response>>
     bool emailExists = await _db.Users
       .AnyAsync(u => u.Email == request.Email, cancellationToken);
 
-    if (!emailExists)
+    if (emailExists)
       return Result<Response>.Fail($"Email '{request.Email}' is already in use.");
 
     bool companyExists = await _db.Companies
@@ -33,7 +33,7 @@ public class Handler : IRequestHandler<Command, Result<Response>>
     string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
     var user = User.Create(
-        Guid.NewGuid(),
+        request.CompanyId,
         request.Email,
         passwordHash,
         request.FirstName,
