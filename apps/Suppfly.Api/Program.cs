@@ -1,8 +1,8 @@
 using Carter;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
+using MediatR;
 using Suppfly.Api.Infrastructure.Persistence;
+using Suppfly.Api.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +21,7 @@ builder.Services.AddMediatR(cfg =>
 {
   cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
 
-  // cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(validationbeha))
+  cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 });
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);

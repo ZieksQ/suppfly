@@ -5,36 +5,36 @@ namespace Suppfly.Api.Domain;
 
 public class User : BaseEntity
 {
-    public Guid CompanyId { get; set; }
-    public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public UserRole Role { get; set; }
-    public UserStatus Status { get; set; }
-    public DateTime? LastLoginAt { get; set; }
+  public Guid CompanyId { get; set; }
+  public string Email { get; set; } = string.Empty;
+  public string PasswordHash { get; set; } = string.Empty;
+  public string FirstName { get; set; } = string.Empty;
+  public string LastName { get; set; } = string.Empty;
+  public UserRole Role { get; set; }
+  public UserStatus Status { get; set; }
+  public DateTime? LastLoginAt { get; set; }
 
-    public Company Company { get; set; } = null!;
+  public Company Company { get; set; } = null!;
 
-    private User() { }
+  private User() { }
 
-    public static User Create(
-            Guid companyId,
-            string email,
-            string passwordHash,
-            string lastName,
-            string firstName,
-            UserRole role)
+  public static User Create(
+          Guid companyId,
+          string email,
+          string passwordHash,
+          string firstName,
+          string lastName,
+          UserRole role)
+  {
+    return new User
     {
-        return new User
-        {
-            CompanyId = companyId,
-            Email = email,
-            PasswordHash = passwordHash,
-            FirstName = firstName,
-            LastName = lastName,
-            Role = role,
-            Status = UserStatus.Inactive
-        };
-    }
+      CompanyId = companyId,
+      Email = email,
+      PasswordHash = passwordHash,
+      FirstName = firstName,
+      LastName = lastName,
+      Role = role,
+      Status = UserStatus.Inactive
+    };
+  }
 }
