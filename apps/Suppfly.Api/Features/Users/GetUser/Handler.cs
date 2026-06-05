@@ -43,7 +43,7 @@ public class Handler : IRequestHandler<Query, Result<Response>>
             u.CreatedAt,
             u.UpdatedAt
             ))
-      .FirstOrDefaultAsync();
+      .FirstOrDefaultAsync(cancellationToken);
 
     if (query is null)
       return Result<Response>.Fail("User does not exists.");
