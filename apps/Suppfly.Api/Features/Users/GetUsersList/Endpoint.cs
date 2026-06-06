@@ -1,5 +1,6 @@
 using Carter;
 using MediatR;
+using Suppfly.Api.Shared.Extensions;
 
 namespace Suppfly.Api.Features.Users.GetUsersList;
 
@@ -17,8 +18,8 @@ public class Endpoint : ICarterModule
         var query = new Query(pageNumber ?? 1, pageSize ?? 10, includeCompany ?? false);
         var result = await sender.Send(query, cancellationToken);
         return result.IsSuccess
-          ? Results.Ok(result.Value)
-          : Results.BadRequest(new { error = result.Error });
+          ? Results.Ok(result.ToResponse("Get users list successfully."))
+          : Results.BadRequest(result.ToResponse());
       })
     .WithName("GetUsersList")
     .WithTags("Users");
