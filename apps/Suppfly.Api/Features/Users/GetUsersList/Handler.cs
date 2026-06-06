@@ -2,10 +2,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Suppfly.Api.Infrastructure.Persistence;
 using Suppfly.Api.Shared;
+using Suppfly.Api.Shared.Response;
 
 namespace Suppfly.Api.Features.Users.GetUsersList;
 
-public class Handler : IRequestHandler<Query, Result<PaginationResponse<Response>>>
+public class Handler : IRequestHandler<Query, Result<PagedList<Response>>>
 {
   private readonly AppDbContext _db;
 
@@ -14,7 +15,7 @@ public class Handler : IRequestHandler<Query, Result<PaginationResponse<Response
     _db = db;
   }
 
-  public async Task<Result<PaginationResponse<Response>>> Handle(Query request, CancellationToken cancellationToken)
+  public async Task<Result<PagedList<Response>>> Handle(Query request, CancellationToken cancellationToken)
   {
     // constraints limit
     int pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
@@ -59,16 +60,14 @@ public class Handler : IRequestHandler<Query, Result<PaginationResponse<Response
       ))
       .ToListAsync(cancellationToken);
 
-    int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-
-    var response = new PaginationResponse<Response>(
-        users,
-        pageNumber,
-        pageSize,
-        totalPages,
-        totalRecords
+    // int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+    var response = new PagedList<Response>(
+      users,
+      pageNumber,
+      pageSize,
+      totalRecords
     );
 
-    return Result<PaginationResponse<Response>>.Ok(response);
+    return Result<PagedList<Response>>.Ok(response);
   }
 }

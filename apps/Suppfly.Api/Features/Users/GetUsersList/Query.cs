@@ -1,5 +1,6 @@
 using MediatR;
 using Suppfly.Api.Shared;
+using Suppfly.Api.Shared.Response;
 
 namespace Suppfly.Api.Features.Users.GetUsersList;
 
@@ -7,4 +8,4 @@ public record Query(
   int PageNumber,
   int PageSize,
   bool IncludeCompany
-) : IRequest<Result<PaginationResponse<Response>>>;
+) : IRequest<Result<PagedList<Response>>>;

@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis;
 using Suppfly.Api.Shared.Response;
 
 namespace Suppfly.Api.Shared.Extensions;
@@ -23,5 +24,17 @@ public static class ResultExtensions
           message,
           result.Error ?? null
       );
+  }
+
+  public static PagedResponse<IEnumerable<T>> ToPagedResponse<T>(
+      this Result<PagedList<T>> result, string message = "")
+  {
+    return new PagedResponse<IEnumerable<T>>(
+        result.IsSuccess,
+        message,
+        result.Value?.Items ?? [],
+        result.Error ?? null,
+        result.Value?.Meta
+        );
   }
 }

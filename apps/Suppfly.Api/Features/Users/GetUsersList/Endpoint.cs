@@ -18,8 +18,8 @@ public class Endpoint : ICarterModule
         var query = new Query(pageNumber ?? 1, pageSize ?? 10, includeCompany ?? false);
         var result = await sender.Send(query, cancellationToken);
         return result.IsSuccess
-          ? Results.Ok(result.ToResponse("Get users list successfully."))
-          : Results.BadRequest(result.ToResponse());
+          ? Results.Ok(result.ToPagedResponse("Get users list successfully."))
+          : Results.BadRequest(result.ToPagedResponse());
       })
     .WithName("GetUsersList")
     .WithTags("Users");
