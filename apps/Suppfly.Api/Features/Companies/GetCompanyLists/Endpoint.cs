@@ -19,8 +19,8 @@ public class Endpoint : ICarterModule
         var result = await sender.Send(query, cancellationToken);
 
         return result.IsSuccess
-          ? Results.Ok(result.ToResponse("Get company lists successfully."))
-          : Results.BadRequest(result.ToResponse());
+          ? Results.Ok(result.ToPagedResponse("Get company lists successfully."))
+          : Results.BadRequest(result.ToPagedResponse());
       })
       .WithName("GetCompanyLists")
       .WithTags("Company");

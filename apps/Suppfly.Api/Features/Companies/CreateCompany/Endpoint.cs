@@ -7,7 +7,7 @@ public class Endpoint : ICarterModule
 {
   public void AddRoutes(IEndpointRouteBuilder app)
   {
-    app.MapPost("/api/company", async (
+    app.MapPost("/api/companies", async (
       Command command,
       ISender sender,
       CancellationToken cancellationToken) =>
@@ -19,6 +19,6 @@ public class Endpoint : ICarterModule
           : Results.BadRequest(new { error = result.Error });
       })
       .WithName("CreateCompany")
-      .WithTags("Companies");
+      .WithTags("Company");
   }
 }
