@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Suppfly.Api.Infrastructure.Persistence;
-using Suppfly.Api.Shared;
+using Suppfly.Api.Shared.Results;
 using Suppfly.Api.Shared.Response;
 
 namespace Suppfly.Api.Features.Users.GetUsersList;

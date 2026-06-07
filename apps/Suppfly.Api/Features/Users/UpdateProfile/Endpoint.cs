@@ -1,7 +1,6 @@
 using Carter;
 using MediatR;
 using Suppfly.Api.Shared.Extensions;
-using Suppfly.Api.Shared.Response;
 
 namespace Suppfly.Api.Features.Users.UpdateProfile;
 

@@ -20,6 +20,10 @@ public class Endpoint : ICarterModule
         return result.IsSuccess
           ? Results.Ok(result.ToResponse("Get user successfully."))
           : Results.NotFound(result.ToResponse());
+
+        // return result
+        //   .OnSuccess(_ => Results.Ok(result.ToResponse("Get user information successfully.")))
+        //   .OnFailure(_ => Results.)
       })
     .WithName("GetUserById")
     .WithTags("Users");

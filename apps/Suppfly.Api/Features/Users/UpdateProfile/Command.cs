@@ -1,5 +1,5 @@
 using MediatR;
-using Suppfly.Api.Shared;
+using Suppfly.Api.Shared.Results;
 
 namespace Suppfly.Api.Features.Users.UpdateProfile;
 

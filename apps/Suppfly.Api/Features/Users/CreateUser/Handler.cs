@@ -1,9 +1,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Suppfly.Api.Domain;
-using Suppfly.Api.Domain.Enums;
 using Suppfly.Api.Infrastructure.Persistence;
-using Suppfly.Api.Shared;
+using Suppfly.Api.Shared.Results;
 
 namespace Suppfly.Api.Features.Users.CreateUser;
 

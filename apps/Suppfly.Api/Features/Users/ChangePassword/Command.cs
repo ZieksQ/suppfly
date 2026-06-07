@@ -1,5 +1,5 @@
 using MediatR;
-using Suppfly.Api.Shared;
+using Suppfly.Api.Shared.Results;
 using Suppfly.Api.Shared.Response;
 
 namespace Suppfly.Api.Features.Users.ChangePassword;
