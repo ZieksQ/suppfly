@@ -21,7 +21,7 @@ public class Endpoint : ICarterModule
         ? Results.Ok(result.ToResponse("Get company details successfully."))
         : Results.NotFound(result.ToResponse());
     })
-      .WithName("GetCompanyWithId")
+      .WithName("GetCompanyById")
       .WithTags("Company");
   }
 }

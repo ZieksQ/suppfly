@@ -15,7 +15,12 @@ public class Endpoint : ICarterModule
         var result = await sender.Send(command, cancellationToken);
 
         return result.IsSuccess
-          ? Results.Created($"/api/company/{result.Value!.Id}", result.Value)
+          // ? Results.Created($"/api/company/{result.Value!.Id}", result.Value)
+          ? Results.CreatedAtRoute(
+              routeName: "GetCompanyById",
+              routeValues: new { id = result.Value!.Id },
+              value: result.Value
+              )
           : Results.BadRequest(new { error = result.Error });
       })
       .WithName("CreateCompany")
