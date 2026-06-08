@@ -1,7 +1,7 @@
 using MediatR;
 using Suppfly.Api.Domain;
 using Suppfly.Api.Infrastructure.Persistence;
-using Suppfly.Api.Shared;
+using Suppfly.Api.Shared.Results;
 
 namespace Suppfly.Api.Features.Companies.CreateCompany;
 

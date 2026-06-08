@@ -1,5 +1,6 @@
 using Carter;
 using MediatR;
+using Suppfly.Api.Shared.Extensions;
 
 namespace Suppfly.Api.Features.Users.CreateUser;
 
@@ -15,8 +16,8 @@ public class Endpoint : ICarterModule
         var result = await sender.Send(command, cancellationToken);
 
         return result.IsSuccess
-          ? Results.Created($"/api/users/{result.Value!.Id}", result.Value)
-          : Results.BadRequest(new { error = result.Error });
+          ? Results.Created($"/api/users/{result.Value!.Id}", result.ToResponse("Created user successfully."))
+          : Results.BadRequest(result.ToResponse());
       })
     .WithName("CreateUser")
     .WithTags("Users");

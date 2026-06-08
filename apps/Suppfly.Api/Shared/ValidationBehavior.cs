@@ -1,7 +1,9 @@
 using FluentValidation;
 using MediatR;
+using Suppfly.Api.Shared.Results;
 
 namespace Suppfly.Api.Shared;
+
 public class ValidationBehavior<TRequest, TResponse>
   : IPipelineBehavior<TRequest, TResponse>
   where TRequest : IRequest<TResponse>
@@ -24,14 +26,14 @@ public class ValidationBehavior<TRequest, TResponse>
       .SelectMany(r => r.Errors)
       .Where(f => f != null)
       .ToList();
-    if (failures.Any())
+    if (failures.Count > 0)
     {
       var errors = string.Join("; ", failures.Select(f => f.ErrorMessage));
       var responseType = typeof(TResponse);
       if (responseType.IsGenericType && responseType.GetGenericTypeDefinition() == typeof(Result<>))
       {
-        var failMethod = responseType.GetMethod("Fail", new[] { typeof(string) });
-        return (TResponse)failMethod!.Invoke(null, new object[] { errors })!;
+        var failMethod = responseType.GetMethod("Fail", [typeof(string)]);
+        return (TResponse)failMethod!.Invoke(null, [errors])!;
       }
       if (responseType == typeof(Result))
       {
