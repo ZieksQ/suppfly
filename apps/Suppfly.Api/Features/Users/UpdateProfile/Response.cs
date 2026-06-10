@@ -9,7 +9,7 @@ public record Response(
   string LastName,
   UserRole Role,
   UserStatus Status,
-  Guid CompanyId,
+  Guid? CompanyId,
   DateTime? LastLoginAt,
   DateTime CreatedAt,
   DateTime UpdatedAt

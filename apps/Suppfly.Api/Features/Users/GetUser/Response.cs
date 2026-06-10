@@ -8,7 +8,7 @@ public record Response(
   string FullName,
   UserRole Role,
   UserStatus Status,
-  Guid CompanyId,
+  Guid? CompanyId,
   CompanyResponseDto? Company,
   DateTime? LastLoginAt,
   DateTime CreatedAt,

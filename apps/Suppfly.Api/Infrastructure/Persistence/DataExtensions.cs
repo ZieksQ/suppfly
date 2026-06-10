@@ -18,7 +18,8 @@ public static class DataExtensions
       ?? throw new InvalidOperationException("PostgreSQL Connection string does not exists.");
 
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseNpgsql(postgresConnString));
+        options.UseNpgsql(postgresConnString)
+          .UseSnakeCaseNamingConvention()); // Added Snake Case from EfCore.NamingConvention package
 
     var redisConnString = builder.Configuration.GetConnectionString("Redis")
       ?? throw new InvalidOperationException("Redis Connection string does not exists.");
