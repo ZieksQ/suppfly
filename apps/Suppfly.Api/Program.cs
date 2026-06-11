@@ -1,9 +1,14 @@
+using System.Text;
 using Carter;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.IdentityModel.Tokens;
+using Suppfly.Api.Domain.Enums;
 using Suppfly.Api.Infrastructure.Persistence;
 using Suppfly.Api.Shared;
+using Suppfly.Api.Shared.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,9 +34,32 @@ builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddCarter();
 
+builder.Services.AddHttpContextAccessor();
 
-// builder.Services.AddAuthentication();
-// builder.Services.AddAuthorization();
+builder.Services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+
+builder.Services.AddTransient<ITokenService, TokenService>();
+
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+  .AddJwtBearer(options =>
+  {
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+      ValidateIssuer = true,
+      ValidateAudience = true,
+      ValidateLifetime = true,
+      ValidateIssuerSigningKey = true,
+      ValidIssuer = jwtSettings["Issuer"],
+      ValidAudience = jwtSettings["Audience"],
+      IssuerSigningKey = new SymmetricSecurityKey(key),
+      ClockSkew = TimeSpan.Zero
+    };
+  });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
@@ -57,5 +85,35 @@ app.MigrateDb();
 app.MapCarter();
 app.UseHttpsRedirection();
 app.UseCors("NextJsPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
+
+// Program.cs — add this before app.Run()
+app.MapGet("/api/debug/me", (ICurrentUserContext currentUser) =>
+{
+  return Results.Ok(new
+  {
+    userId = currentUser.UserId,
+    role = currentUser.UserRole.ToString(),
+    status = currentUser.Status.ToString(),
+    isAuthenticated = currentUser.IsAuthenticated
+  });
+})
+.RequireAuthorization();
+
+// NOTE: This is just a Debugging Endpoints to check if JWT Works
+app.MapGet("/api/debug/token", (ITokenService tokenService) =>
+{
+  // Hardcode a fake user to simulate a logged-in buyer
+  var fakeUserId = Guid.NewGuid();
+  var token = tokenService.GenerateAccessToken(
+      fakeUserId,
+      UserRole.CompanyOwner,
+      UserStatus.Active
+  );
+
+  return Results.Ok(new { token });
+})
+.AllowAnonymous();
 
 app.Run();

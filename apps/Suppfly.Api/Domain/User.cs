@@ -5,7 +5,7 @@ namespace Suppfly.Api.Domain;
 
 public class User : BaseEntity
 {
-  public Guid CompanyId { get; set; }
+  public Guid? CompanyId { get; set; }
   public string Email { get; set; } = string.Empty;
   public string PasswordHash { get; set; } = string.Empty;
   public string FirstName { get; set; } = string.Empty;
@@ -13,13 +13,15 @@ public class User : BaseEntity
   public UserRole Role { get; set; }
   public UserStatus Status { get; set; }
   public DateTime? LastLoginAt { get; set; }
+  public string? RefreshToken { get; set; }
+  public DateTime? RefreshTokenExpiry { get; set; }
 
-  public Company Company { get; set; } = null!;
+  public Company? Company { get; set; }
 
   private User() { }
 
   public static User Create(
-          Guid companyId,
+          Guid? companyId,
           string email,
           string passwordHash,
           string firstName,
@@ -28,7 +30,7 @@ public class User : BaseEntity
   {
     return new User
     {
-      CompanyId = companyId,
+      CompanyId = companyId ?? null,
       Email = email,
       PasswordHash = passwordHash,
       FirstName = firstName,
