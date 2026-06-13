@@ -59,7 +59,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
   });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+  .AddPolicy("AdminOnly", policy => policy.RequireRole(Roles.PlatformAdmin));
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>

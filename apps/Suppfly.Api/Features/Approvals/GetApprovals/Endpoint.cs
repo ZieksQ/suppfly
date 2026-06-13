@@ -1,6 +1,8 @@
 using Carter;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Suppfly.Api.Domain.Enums;
+using Suppfly.Api.Shared.Auth;
 using Suppfly.Api.Shared.Enums;
 using Suppfly.Api.Shared.Extensions;
 
@@ -36,6 +38,9 @@ public class Endpoint : ICarterModule
         return result.IsSuccess
           ? Results.Ok(result.ToPagedResponse("Get Approvals Successfully."))
           : Results.BadRequest(result.ToPagedResponse());
-      });
+      })
+    // .RequireAuthorization(new AuthorizeAttribute { Roles = Roles.PlatformAdmin })
+    .RequireAuthorization("AdminOnly")
+    .WithTags("Approvals");
   }
 }
