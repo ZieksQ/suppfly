@@ -61,7 +61,7 @@ public class Handler : IRequestHandler<Command, Result<Guid>>
           passwordHash,
           request.FirstName,
           request.LastName,
-          UserRole.CompanyOwner
+          UserRole.Owner
       );
 
       _db.Users.Add(user);

@@ -2,15 +2,14 @@ namespace Suppfly.Api.Domain.Enums;
 
 public enum UserRole
 {
-    PlatformAdmin,
-    CompanyOwner,
-    Staff,
-    Approver
+  Owner = 1,
+  Admin = 2,
+  Member = 3
 }
 
 public enum UserStatus
 {
-    Active,
-    Inactive,
-    Invited
+  Invited = 1,
+  Active = 2,
+  Disabled = 3
 }

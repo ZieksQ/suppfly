@@ -6,33 +6,34 @@ namespace Suppfly.Api.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+  public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Company> Companies => Set<Company>();
-    public DbSet<CompanyApprovalRequest> CompanyApprovalRequests => Set<CompanyApprovalRequest>();
+  public DbSet<User> Users => Set<User>();
+  public DbSet<Company> Companies => Set<Company>();
+  public DbSet<CompanyApprovalRequest> CompanyApprovalRequests => Set<CompanyApprovalRequest>();
+  public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+    modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    // base.OnModelCreating(modelBuilder);
+  }
+
+  public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+  {
+    foreach (var entry in ChangeTracker.Entries<BaseEntity>())
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-        // base.OnModelCreating(modelBuilder);
+      if (entry.State == EntityState.Added)
+      {
+        entry.Entity.UpdatedAt = DateTime.UtcNow;
+      }
+      else if (entry.State == EntityState.Modified)
+      {
+        entry.Entity.UpdatedAt = DateTime.UtcNow;
+      }
     }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        foreach (var entry in ChangeTracker.Entries<BaseEntity>())
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.UpdatedAt = DateTime.UtcNow;
-            }
-            else if (entry.State == EntityState.Modified)
-            {
-                entry.Entity.UpdatedAt = DateTime.UtcNow;
-            }
-        }
-        return base.SaveChangesAsync(cancellationToken);
-    }
+    return base.SaveChangesAsync(cancellationToken);
+  }
 }
 

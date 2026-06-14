@@ -7,14 +7,13 @@ public class Company : BaseEntity
 {
   public string Name { get; set; } = string.Empty;
   public string Slug { get; set; } = string.Empty;
+  public Guid OwnerUserId { get; set; }
   public CompanyType Type { get; set; }
   public string? TaxId { get; set; }
   public CompanyStatus Status { get; set; }
   public CompanyTier Tier { get; set; }
-  public DateTime? ApprovedAt { get; set; }
-  public Guid? ApprovedByUserId { get; set; }
 
-  public User? ApprovedByUser { get; set; }
+  public User OwnerUser { get; set; } = null!;
   public ICollection<User> Users { get; set; } = [];
 
   private Company() { }
@@ -24,7 +23,7 @@ public class Company : BaseEntity
           string slug,
           CompanyType type,
           string? taxId = null,
-          CompanyTier tier = CompanyTier.Standard
+          CompanyTier tier = CompanyTier.Basic
           )
   {
     return new Company

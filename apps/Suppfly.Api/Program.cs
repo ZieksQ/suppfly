@@ -3,7 +3,6 @@ using Carter;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using Suppfly.Api.Domain.Enums;
 using Suppfly.Api.Infrastructure.Persistence;
@@ -109,7 +108,7 @@ app.MapGet("/api/debug/token", (ITokenService tokenService) =>
   var fakeUserId = Guid.NewGuid();
   var token = tokenService.GenerateAccessToken(
       fakeUserId,
-      UserRole.CompanyOwner,
+      UserRole.Owner,
       UserStatus.Active
   );
 

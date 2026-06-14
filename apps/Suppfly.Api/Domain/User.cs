@@ -3,25 +3,26 @@ using Suppfly.Api.Shared;
 
 namespace Suppfly.Api.Domain;
 
+// NOTE: Add invited user by in the future or create new table for invited users
 public class User : BaseEntity
 {
-  public Guid? CompanyId { get; set; }
+  public Guid CompanyId { get; set; }
+  public Company? Company { get; set; }
+
   public string Email { get; set; } = string.Empty;
-  public string PasswordHash { get; set; } = string.Empty;
-  public string FirstName { get; set; } = string.Empty;
-  public string LastName { get; set; } = string.Empty;
+  public string? PasswordHash { get; set; }
+  public string? FirstName { get; set; }
+  public string? LastName { get; set; }
   public UserRole Role { get; set; }
   public UserStatus Status { get; set; }
   public DateTime? LastLoginAt { get; set; }
-  public string? RefreshToken { get; set; }
-  public DateTime? RefreshTokenExpiry { get; set; }
 
-  public Company? Company { get; set; }
+  public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 
   private User() { }
 
   public static User Create(
-          Guid? companyId,
+          Guid companyId,
           string email,
           string passwordHash,
           string firstName,
@@ -30,13 +31,13 @@ public class User : BaseEntity
   {
     return new User
     {
-      CompanyId = companyId ?? null,
+      CompanyId = companyId,
       Email = email,
       PasswordHash = passwordHash,
       FirstName = firstName,
       LastName = lastName,
       Role = role,
-      Status = UserStatus.Inactive
+      Status = UserStatus.Disabled
     };
   }
 }
