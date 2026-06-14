@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Suppfly.Api.Domain.Enums;
 using Suppfly.Api.Infrastructure.Persistence;
 using Suppfly.Api.Shared.Auth;
-using Suppfly.Api.Shared.DTOs;
 using Suppfly.Api.Shared.Response;
 using Suppfly.Api.Shared.Results;
 
@@ -47,10 +46,10 @@ public class Handler : IRequestHandler<Command, Result<ApprovalResponseDto>>
           approvalRequest.Company.Id,
           approvalRequest.Company.Name,
           approvalRequest.Company.Slug,
-          approvalRequest.Company.Type,
+          approvalRequest.Company.Type.ToString(),
           approvalRequest.Company.TaxId,
-          approvalRequest.Company.Status,
-          approvalRequest.Company.Tier,
+          approvalRequest.Company.Status.ToString(),
+          approvalRequest.Company.Tier.ToString(),
           approvalRequest.Company.ApprovedAt,
           approvalRequest.Company.ApprovedByUserId,
           approvalRequest.Company.CreatedAt,
@@ -60,13 +59,13 @@ public class Handler : IRequestHandler<Command, Result<ApprovalResponseDto>>
           approvalRequest.RequestedByUser.FirstName,
           approvalRequest.RequestedByUser.LastName,
           approvalRequest.RequestedByUser.Email,
-          approvalRequest.RequestedByUser.Role,
-          approvalRequest.RequestedByUser.Status,
+          approvalRequest.RequestedByUser.Role.ToString(),
+          approvalRequest.RequestedByUser.Status.ToString(),
           approvalRequest.RequestedByUser.CompanyId,
           approvalRequest.RequestedByUser.LastLoginAt,
           approvalRequest.RequestedByUser.CreatedAt,
           approvalRequest.RequestedByUser.UpdatedAt),
-        approvalRequest.Status,
+        approvalRequest.Status.ToString(),
         approvalRequest.Notes,
         approvalRequest.ReviewedByUserId,
         approvalRequest.ReviewedAt,

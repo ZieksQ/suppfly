@@ -1,14 +1,12 @@
-using Suppfly.Api.Domain.Enums;
-
-namespace Suppfly.Api.Shared.DTOs;
+namespace Suppfly.Api.Shared.Response;
 
 public record UserResponseDto(
   Guid Id,
   string FirstName,
   string LastName,
   string Email,
-  UserRole Role,
-  UserStatus Status,
+  string Role,
+  string Status,
   Guid? CompanyId,
   DateTime? LastLoginAt,
   DateTime CreatedAt,

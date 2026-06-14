@@ -1,15 +1,13 @@
-using Suppfly.Api.Domain.Enums;
-
-namespace Suppfly.Api.Shared.DTOs;
+namespace Suppfly.Api.Shared.Response;
 
 public record CompanyResponseDto(
   Guid Id,
   string Name,
   string Slug,
-  CompanyType Type,
+  string Type,
   string? TaxId,
-  CompanyStatus Status,
-  CompanyTier Tier,
+  string Status,
+  string Tier,
   DateTime? ApprovedAt,
   Guid? ApprovedByUserId,
   DateTime CreatedAt,
