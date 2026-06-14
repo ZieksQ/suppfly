@@ -13,7 +13,7 @@ public class Endpoint : ICarterModule
           ISender sender,
           CancellationToken cancellationToken) =>
     {
-      var result = await sender.Send(command);
+      var result = await sender.Send(command, cancellationToken);
 
       return result.IsSuccess
         ? Results.AcceptedAtRoute("GetUserById", new { id = result.Value }, result.ToResponse("Successfully Registered User."))

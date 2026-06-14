@@ -52,7 +52,6 @@ public class Handler : IRequestHandler<Command, Result<Guid>>
       _db.Companies.Add(company);
 
       await _db.SaveChangesAsync(cancellationToken);
-
       string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
       var user = User.Create(
@@ -65,6 +64,10 @@ public class Handler : IRequestHandler<Command, Result<Guid>>
       );
 
       _db.Users.Add(user);
+      await _db.SaveChangesAsync(cancellationToken);
+
+      company.OwnerUserId = user.Id;
+
       await _db.SaveChangesAsync(cancellationToken);
 
       var approvalRequest = CompanyApprovalRequest.Create(

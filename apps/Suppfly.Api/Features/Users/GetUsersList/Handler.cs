@@ -42,17 +42,15 @@ public class Handler : IRequestHandler<Query, Result<PagedList<Response>>>
         u.CompanyId,
         request.IncludeCompany && u.Company != null
           ? new CompanyResponseDto(
+            u.Company.Id,
             u.Company.Name,
             u.Company.Slug,
-            u.Company.Type,
+            u.Company.Type.ToString(),
             u.Company.TaxId,
-            u.Company.Status,
-            u.Company.Tier,
-            u.Company.ApprovedAt,
-            u.Company.ApprovedByUserId,
+            u.Company.Status.ToString(),
+            u.Company.Tier.ToString(),
             u.Company.CreatedAt,
-            u.Company.UpdatedAt
-            )
+            u.Company.UpdatedAt)
           : null,
         u.LastLoginAt,
         u.CreatedAt,

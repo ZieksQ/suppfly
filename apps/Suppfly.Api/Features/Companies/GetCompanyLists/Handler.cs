@@ -34,8 +34,6 @@ public class Handler : IRequestHandler<Query, Result<PagedList<Response>>>
         c.TaxId,
         c.Status,
         c.Tier,
-        c.ApprovedByUserId,
-        c.ApprovedAt,
         c.CreatedAt,
         c.UpdatedAt
       ))

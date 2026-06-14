@@ -17,7 +17,7 @@ public class Handler : IRequestHandler<Command, Result<Guid>>
   public async Task<Result<Guid>> Handle(Command request, CancellationToken cancellationToken)
   {
     var exists = await _db.Users
-      .AnyAsync(u => u.Email == request.Email.ToLowerInvariant(), cancellationToken);
+      .AnyAsync(u => u.Email == request.Email, cancellationToken);
 
     if (exists)
       return Result<Guid>.Fail("An account with this email already exists.");

@@ -50,8 +50,6 @@ public class Handler : IRequestHandler<Command, Result<ApprovalResponseDto>>
           approvalRequest.Company.TaxId,
           approvalRequest.Company.Status.ToString(),
           approvalRequest.Company.Tier.ToString(),
-          approvalRequest.Company.ApprovedAt,
-          approvalRequest.Company.ApprovedByUserId,
           approvalRequest.Company.CreatedAt,
           approvalRequest.Company.UpdatedAt),
         new UserResponseDto(

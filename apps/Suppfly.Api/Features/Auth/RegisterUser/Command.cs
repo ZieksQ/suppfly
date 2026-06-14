@@ -10,5 +10,5 @@ public record Command(
   string Email,
   string Password,
   UserRole Role,
-  Guid? CompanyId
+  Guid CompanyId
 ) : IRequest<Result<Guid>>;

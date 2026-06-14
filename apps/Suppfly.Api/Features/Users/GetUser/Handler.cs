@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Suppfly.Api.Infrastructure.Persistence;
+using Suppfly.Api.Shared.Response;
 using Suppfly.Api.Shared.Results;
 
 namespace Suppfly.Api.Features.Users.GetUser;
@@ -27,22 +28,18 @@ public class Handler : IRequestHandler<Query, Result<Response>>
             u.CompanyId,
             request.IncludeUser && u.Company != null
               ? new CompanyResponseDto(
+                u.Company.Id,
                 u.Company.Name,
                 u.Company.Slug,
-                u.Company.Type,
+                u.Company.Type.ToString(),
                 u.Company.TaxId,
-                u.Company.Status,
-                u.Company.Tier,
-                u.Company.ApprovedAt,
-                u.Company.ApprovedByUserId,
+                u.Company.Status.ToString(),
+                u.Company.Tier.ToString(),
                 u.Company.CreatedAt,
-                u.Company.UpdatedAt
-                )
-              : null,
+                u.Company.UpdatedAt) : null,
             u.LastLoginAt,
             u.CreatedAt,
-            u.UpdatedAt
-            ))
+            u.UpdatedAt))
       .FirstOrDefaultAsync(cancellationToken);
 
     if (query is null)

@@ -27,8 +27,6 @@ public class Handler : IRequestHandler<Query, Result<Response>>
         c.TaxId,
         c.Status,
         c.Tier,
-        c.ApprovedByUserId,
-        c.ApprovedAt,
         c.CreatedAt,
         c.UpdatedAt
       ))

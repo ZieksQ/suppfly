@@ -12,8 +12,8 @@ using Suppfly.Api.Infrastructure.Persistence;
 namespace Suppfly.Api.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260610193231_FixedNamingConventions")]
-    partial class FixedNamingConventions
+    [Migration("20260614204301_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,14 +32,6 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime?>("ApprovedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("approved_at");
-
-                    b.Property<Guid?>("ApprovedByUserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("approved_by_user_id");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -49,6 +41,10 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("name");
+
+                    b.Property<Guid?>("OwnerUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("owner_user_id");
 
                     b.Property<string>("Slug")
                         .IsRequired()
@@ -86,8 +82,8 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
                     b.HasKey("Id")
                         .HasName("pk_companies");
 
-                    b.HasIndex("ApprovedByUserId")
-                        .HasDatabaseName("ix_companies_approved_by_user_id");
+                    b.HasIndex("OwnerUserId")
+                        .HasDatabaseName("ix_companies_owner_user_id");
 
                     b.HasIndex("Slug")
                         .IsUnique()
@@ -153,6 +149,47 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
                     b.ToTable("company_approval_requests", (string)null);
                 });
 
+            modelBuilder.Entity("Suppfly.Api.Domain.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("revoked_at");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("token");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_refresh_tokens");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_refresh_tokens_user_id");
+
+                    b.ToTable("refresh_tokens", (string)null);
+                });
+
             modelBuilder.Entity("Suppfly.Api.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -160,7 +197,7 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid?>("CompanyId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid")
                         .HasColumnName("company_id");
 
@@ -195,14 +232,6 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password_hash");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("text")
-                        .HasColumnName("refresh_token");
-
-                    b.Property<DateTime?>("RefreshTokenExpiry")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("refresh_token_expiry");
-
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -234,13 +263,13 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Suppfly.Api.Domain.Company", b =>
                 {
-                    b.HasOne("Suppfly.Api.Domain.User", "ApprovedByUser")
+                    b.HasOne("Suppfly.Api.Domain.User", "OwnerUser")
                         .WithMany()
-                        .HasForeignKey("ApprovedByUserId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_companies_users_approved_by_user_id");
+                        .HasForeignKey("OwnerUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_companies_users_owner_user_id");
 
-                    b.Navigation("ApprovedByUser");
+                    b.Navigation("OwnerUser");
                 });
 
             modelBuilder.Entity("Suppfly.Api.Domain.CompanyApprovalRequest", b =>
@@ -272,12 +301,25 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
                     b.Navigation("ReviewedByUser");
                 });
 
+            modelBuilder.Entity("Suppfly.Api.Domain.RefreshToken", b =>
+                {
+                    b.HasOne("Suppfly.Api.Domain.User", "User")
+                        .WithMany("RefreshTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_refresh_tokens_users_user_id");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Suppfly.Api.Domain.User", b =>
                 {
                     b.HasOne("Suppfly.Api.Domain.Company", "Company")
                         .WithMany("Users")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_users_companies_company_id");
 
                     b.Navigation("Company");
@@ -286,6 +328,11 @@ namespace Suppfly.Api.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Suppfly.Api.Domain.Company", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Suppfly.Api.Domain.User", b =>
+                {
+                    b.Navigation("RefreshTokens");
                 });
 #pragma warning restore 612, 618
         }

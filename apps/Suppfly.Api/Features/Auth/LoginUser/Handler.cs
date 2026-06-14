@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Suppfly.Api.Domain;
 using Suppfly.Api.Domain.Enums;
 using Suppfly.Api.Infrastructure.Persistence;
 using Suppfly.Api.Shared.Auth;
@@ -20,12 +21,18 @@ public class Handler : IRequestHandler<Command, Result<Response>>
   public async Task<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
   {
     var user = await _db.Users
-      .FirstOrDefaultAsync(u => u.Email == request.Email.ToLowerInvariant(), cancellationToken);
+      .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
 
     // NOTE: do not say "email not found". 
     // this leaks the information to attackers
     if (user is null)
       return Result<Response>.Fail("Invalid email or password.");
+
+    // If user is invited the hashpassword is still null on creation
+    if (string.IsNullOrWhiteSpace(user.PasswordHash))
+    {
+      return Result<Response>.Fail("Invalid email or password.");
+    }
 
     // verify password
     var passwordIsValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
@@ -42,8 +49,16 @@ public class Handler : IRequestHandler<Command, Result<Response>>
     var refreshToken = _tokenService.GenerateRefreshToken();
 
     // store the refresh token
-    user.RefreshToken = refreshToken;
-    user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+    var newRefreshToken = new RefreshToken
+    {
+      UserId = user.Id,
+      Token = refreshToken,
+      ExpiresAt = DateTime.UtcNow.AddDays(7)
+    };
+
+    _db.RefreshTokens.Add(newRefreshToken);
+
+    user.LastLoginAt = DateTime.UtcNow;
 
     await _db.SaveChangesAsync(cancellationToken);
 
@@ -52,7 +67,6 @@ public class Handler : IRequestHandler<Command, Result<Response>>
           RefreshToken: refreshToken,
           UserId: user.Id,
           Role: user.Role,
-          CompanyId: user.CompanyId
-          ));
+          CompanyId: user.CompanyId));
   }
 }

@@ -37,8 +37,8 @@ public class Handler : IRequestHandler<Query, Result<PagedList<ApprovalResponseD
     {
       query = query.Where(apr =>
           EF.Functions.ILike(apr.Company.Name, $"%{request.Search}%")
-            || EF.Functions.ILike(apr.RequestedByUser.FirstName, $"%{request.Search}%")
-            || EF.Functions.ILike(apr.RequestedByUser.LastName, $"%{request.Search}%"));
+            || EF.Functions.ILike(apr.RequestedByUser.FirstName!, $"%{request.Search}%")
+            || EF.Functions.ILike(apr.RequestedByUser.LastName!, $"%{request.Search}%"));
     }
 
     query = request.SortDirections switch
@@ -61,8 +61,6 @@ public class Handler : IRequestHandler<Query, Result<PagedList<ApprovalResponseD
               apr.Company.TaxId,
               apr.Company.Status.ToString(),
               apr.Company.Tier.ToString(),
-              apr.Company.ApprovedAt,
-              apr.Company.ApprovedByUserId,
               apr.Company.CreatedAt,
               apr.Company.UpdatedAt) : null,
         request.IncludeOwner || request.IncludeAll

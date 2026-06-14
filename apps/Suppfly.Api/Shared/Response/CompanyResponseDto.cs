@@ -8,8 +8,6 @@ public record CompanyResponseDto(
   string? TaxId,
   string Status,
   string Tier,
-  DateTime? ApprovedAt,
-  Guid? ApprovedByUserId,
   DateTime CreatedAt,
   DateTime UpdatedAt
 );

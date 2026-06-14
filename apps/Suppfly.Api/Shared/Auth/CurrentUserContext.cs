@@ -44,7 +44,7 @@ public class CurrentUserContext : ICurrentUserContext
 
       return Enum.TryParse<UserStatus>(claim, out var status)
         ? status
-        : UserStatus.Inactive;
+        : UserStatus.Disabled;
     }
   }
 

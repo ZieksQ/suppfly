@@ -19,8 +19,6 @@ public record Response(
   string? TaxId,
   CompanyStatus Status,
   CompanyTier Tier,
-  Guid? ApprovedByUserId,
-  DateTime? ApprovedAt,
   DateTime CreatedAt,
   DateTime UpdatedAt
 );
