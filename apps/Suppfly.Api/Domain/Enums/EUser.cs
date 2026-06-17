@@ -1,11 +1,11 @@
 namespace Suppfly.Api.Domain.Enums;
 
-public enum UserRole
-{
-  Owner = 1,
-  Admin = 2,
-  Member = 3
-}
+// public enum UserRole
+// {
+//   Owner = 1,
+//   Admin = 2,
+//   Member = 3
+// }
 
 public enum UserStatus
 {

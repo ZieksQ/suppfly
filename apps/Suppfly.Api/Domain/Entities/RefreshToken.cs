@@ -1,8 +1,7 @@
 using Suppfly.Api.Shared;
 
-namespace Suppfly.Api.Domain;
+namespace Suppfly.Api.Domain.Entities;
 
-// NOTE: Hash token later after fixing schema
 public class RefreshToken : BaseEntity
 {
   public Guid UserId { get; set; }

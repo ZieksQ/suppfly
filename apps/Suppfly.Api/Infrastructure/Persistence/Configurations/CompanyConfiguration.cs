@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Suppfly.Api.Domain;
+using Suppfly.Api.Domain.Entities;
 
 namespace Suppfly.Api.Infrastructure.Persistence.Configurations;
 
@@ -13,37 +13,25 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
     builder.HasKey(c => c.Id);
 
     builder.Property(c => c.Name)
-        .IsRequired()
-        .HasMaxLength(255);
-
-    builder.Property(c => c.Slug)
-        .IsRequired()
-        .HasMaxLength(255);
-
-    builder.HasIndex(c => c.Slug)
-        .IsUnique();
-
-    builder.Property(c => c.Type)
-        .IsRequired()
-        .HasConversion<string>()
-        .HasMaxLength(50);
-
-    builder.Property(c => c.TaxId)
-        .HasMaxLength(100);
+      .IsRequired()
+      .HasMaxLength(255);
 
     builder.Property(c => c.Status)
-        .IsRequired()
-        .HasConversion<string>()
-        .HasMaxLength(50);
+      .IsRequired()
+      .HasConversion<string>()
+      .HasMaxLength(50);
 
-    builder.Property(c => c.Tier)
-        .IsRequired()
-        .HasConversion<string>()
-        .HasMaxLength(50);
-
-    builder.HasOne(c => c.OwnerUser)
+    builder.HasOne(c => c.ApprovedByUser)
       .WithMany()
-      .HasForeignKey(c => c.OwnerUserId)
-      .OnDelete(DeleteBehavior.Restrict);
+      .HasForeignKey(c => c.ApprovedByUserId)
+      .OnDelete(DeleteBehavior.SetNull);
+
+    builder.HasOne(c => c.RejectedByUser)
+      .WithMany()
+      .HasForeignKey(c => c.RejectedByUserId)
+      .OnDelete(DeleteBehavior.SetNull);
+
+    builder.Property(c => c.RejectionReason)
+      .HasMaxLength(1000);
   }
 }

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Suppfly.Api.Domain;
+using Suppfly.Api.Domain.Entities;
 using Suppfly.Api.Shared;
 
 namespace Suppfly.Api.Infrastructure.Persistence;
@@ -10,14 +10,13 @@ public class AppDbContext : DbContext
 
   public DbSet<User> Users => Set<User>();
   public DbSet<Company> Companies => Set<Company>();
-  public DbSet<CompanyApprovalRequest> CompanyApprovalRequests => Set<CompanyApprovalRequest>();
+  public DbSet<CompanyUser> CompanyUsers => Set<CompanyUser>();
+  public DbSet<CompanyInvitation> CompanyInvitations => Set<CompanyInvitation>();
   public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
-
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-    // base.OnModelCreating(modelBuilder);
   }
 
   public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
