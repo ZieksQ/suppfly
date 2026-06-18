@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Suppfly.Api.Domain.Enums;
 using Suppfly.Api.Infrastructure.Persistence;
-using Suppfly.Api.Shared;
 using Suppfly.Api.Shared.Auth;
+using Suppfly.Api.Shared.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -102,18 +102,19 @@ app.MapGet("/api/debug/me", (ICurrentUserContext currentUser) =>
 .RequireAuthorization();
 
 // NOTE: This is just a Debugging Endpoints to check if JWT Works
-app.MapGet("/api/debug/token", (ITokenService tokenService) =>
-{
-  // Hardcode a fake user to simulate a logged-in buyer
-  var fakeUserId = Guid.NewGuid();
-  var token = tokenService.GenerateAccessToken(
-      fakeUserId,
-      UserRole.Owner,
-      UserStatus.Active
-  );
 
-  return Results.Ok(new { token });
-})
-.AllowAnonymous();
+// app.MapGet("/api/debug/token", (ITokenService tokenService) =>
+// {
+//   // Hardcode a fake user to simulate a logged-in buyer
+//   var fakeUserId = Guid.NewGuid();
+//   var token = tokenService.GenerateAccessToken(
+//       fakeUserId,
+//       UserRole.Owner,
+//       UserStatus.Active
+//   );
+//
+//   return Results.Ok(new { token });
+// })
+// .AllowAnonymous();
 
 app.Run();

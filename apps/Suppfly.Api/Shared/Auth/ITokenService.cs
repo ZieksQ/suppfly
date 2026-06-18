@@ -5,7 +5,7 @@ namespace Suppfly.Api.Shared.Auth;
 
 public interface ITokenService
 {
-  string GenerateAccessToken(Guid userId, UserRole role, UserStatus status);
+  string GenerateAccessToken(Guid userId, GlobalRole? globalRole);
   string GenerateRefreshToken();
   ClaimsPrincipal? ValidateRefreshToken(string token);
 }

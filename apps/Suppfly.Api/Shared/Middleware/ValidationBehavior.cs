@@ -2,7 +2,7 @@ using FluentValidation;
 using MediatR;
 using Suppfly.Api.Shared.Results;
 
-namespace Suppfly.Api.Shared;
+namespace Suppfly.Api.Shared.Middleware;
 
 public class ValidationBehavior<TRequest, TResponse>
   : IPipelineBehavior<TRequest, TResponse>
