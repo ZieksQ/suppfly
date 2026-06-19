@@ -59,7 +59,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
   });
 
 builder.Services.AddAuthorizationBuilder()
-  .AddPolicy("AdminOnly", policy => policy.RequireRole(Roles.PlatformAdmin));
+  .AddPolicy("AdministrationUsers", policy =>
+  {
+    policy.RequireRole(Roles.SuperAdmin);
+    policy.RequireRole(Roles.SupportAgent);
+  });
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
