@@ -6,6 +6,6 @@ public interface ICurrentUserContext
 {
   Guid UserId { get; }
   UserRole UserRole { get; }
-  UserStatus Status { get; }
+  // UserStatus Status { get; }
   bool IsAuthenticated { get; }
 }

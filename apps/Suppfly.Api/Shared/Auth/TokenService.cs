@@ -15,19 +15,23 @@ public class TokenService : ITokenService
   {
     _config = config;
   }
-  public string GenerateAccessToken(Guid userId, UserRole role, UserStatus status)
+  public string GenerateAccessToken(Guid userId, GlobalRole? role)
   {
     var jwtSettings = _config.GetSection("Jwt");
     var key = new SymmetricSecurityKey(
       Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!));
 
-    var claims = new[]
+    var claims = new List<Claim>
     {
-      new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-      new Claim(ClaimTypes.Role, role.ToString()),
-      new Claim("account_status", status.ToString()),
-      new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+      new (ClaimTypes.NameIdentifier, userId.ToString()),
+      // new Claim("account_status", status.ToString()),
+      new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
     };
+
+    if (role != null)
+    {
+      claims.Add(new Claim(ClaimTypes.Role, role.ToString()!));
+    }
 
     var token = new JwtSecurityToken(
         issuer: jwtSettings["Issuer"],

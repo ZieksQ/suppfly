@@ -3,12 +3,11 @@ using Carter;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using Suppfly.Api.Domain.Enums;
 using Suppfly.Api.Infrastructure.Persistence;
-using Suppfly.Api.Shared;
 using Suppfly.Api.Shared.Auth;
+using Suppfly.Api.Shared.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,7 +58,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
   });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+  .AddPolicy("AdministrationUsers", policy =>
+  {
+    policy.RequireRole(Roles.SuperAdmin);
+    policy.RequireRole(Roles.SupportAgent);
+  });
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
@@ -95,25 +99,26 @@ app.MapGet("/api/debug/me", (ICurrentUserContext currentUser) =>
   {
     userId = currentUser.UserId,
     role = currentUser.UserRole.ToString(),
-    status = currentUser.Status.ToString(),
+    // status = currentUser.Status.ToString(),
     isAuthenticated = currentUser.IsAuthenticated
   });
 })
 .RequireAuthorization();
 
 // NOTE: This is just a Debugging Endpoints to check if JWT Works
-app.MapGet("/api/debug/token", (ITokenService tokenService) =>
-{
-  // Hardcode a fake user to simulate a logged-in buyer
-  var fakeUserId = Guid.NewGuid();
-  var token = tokenService.GenerateAccessToken(
-      fakeUserId,
-      UserRole.CompanyOwner,
-      UserStatus.Active
-  );
 
-  return Results.Ok(new { token });
-})
-.AllowAnonymous();
+// app.MapGet("/api/debug/token", (ITokenService tokenService) =>
+// {
+//   // Hardcode a fake user to simulate a logged-in buyer
+//   var fakeUserId = Guid.NewGuid();
+//   var token = tokenService.GenerateAccessToken(
+//       fakeUserId,
+//       UserRole.Owner,
+//       UserStatus.Active
+//   );
+//
+//   return Results.Ok(new { token });
+// })
+// .AllowAnonymous();
 
 app.Run();

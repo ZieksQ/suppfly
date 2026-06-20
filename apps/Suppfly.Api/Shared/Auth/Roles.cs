@@ -2,8 +2,11 @@ namespace Suppfly.Api.Shared.Auth;
 
 public static class Roles
 {
-  public const string PlatformAdmin = "PlatformAdmin";
-  public const string CompanyOwner = "CompanyOwner";
-  public const string Staff = "Staff";
-  public const string Approver = "Approver";
+  // Application Users
+  public const string SuperAdmin = "super_admin";
+  public const string SupportAgent = "support_agent";
+
+  // Client Side Users
+  public const string OrgAdmin = "org_admin";
+  public const string OrgMember = "org_member";
 }
