@@ -35,18 +35,18 @@ public class CurrentUserContext : ICurrentUserContext
     }
   }
 
-  public UserStatus Status
-  {
-    get
-    {
-      var claim = _httpContextAccessor.HttpContext?.User
-        .FindFirst("user_status")?.Value;
-
-      return Enum.TryParse<UserStatus>(claim, out var status)
-        ? status
-        : UserStatus.Disabled;
-    }
-  }
+  // public UserStatus Status
+  // {
+  //   get
+  //   {
+  //     var claim = _httpContextAccessor.HttpContext?.User
+  //       .FindFirst("user_status")?.Value;
+  //
+  //     return Enum.TryParse<UserStatus>(claim, out var status)
+  //       ? status
+  //       : UserStatus.Disabled;
+  //   }
+  // }
 
   public bool IsAuthenticated =>
     _httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;

@@ -29,7 +29,7 @@ public class Handler : IRequestHandler<Command, Result<Response>>
     if (user is null)
       return Result<Response>.Fail("Incorrect email or password.");
 
-    if (!user.EmailVerified)
+    if (!user.IsEmailVerified)
       return Result<Response>.Fail("User and Company application is in progress.");
 
     bool hasCompanyActive = user.CompanyUsers

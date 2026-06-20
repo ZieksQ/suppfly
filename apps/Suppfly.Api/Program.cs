@@ -99,7 +99,7 @@ app.MapGet("/api/debug/me", (ICurrentUserContext currentUser) =>
   {
     userId = currentUser.UserId,
     role = currentUser.UserRole.ToString(),
-    status = currentUser.Status.ToString(),
+    // status = currentUser.Status.ToString(),
     isAuthenticated = currentUser.IsAuthenticated
   });
 })

@@ -10,6 +10,8 @@ public class CompanyUserConfiguration : IEntityTypeConfiguration<CompanyUser>
   {
     builder.ToTable("company_users");
 
+    builder.HasKey(cu => new { cu.CompanyId, cu.UserId });
+
     builder.HasOne(cu => cu.Company)
       .WithMany(c => c.CompanyUsers)
       .HasForeignKey(cu => cu.CompanyId)
