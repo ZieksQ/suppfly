@@ -46,7 +46,7 @@ public class Handler : IRequestHandler<Command, Result<Guid>>
       _context.Users.Add(user);
       await _context.SaveChangesAsync(cancellationToken);
 
-      var company = Company.Create(request.CompanyName);
+      var company = Company.Create(request.CompanyName, user.Id);
 
       _context.Companies.Add(company);
       await _context.SaveChangesAsync(cancellationToken);

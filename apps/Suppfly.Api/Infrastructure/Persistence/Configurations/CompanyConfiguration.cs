@@ -21,6 +21,11 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
       .HasConversion<string>()
       .HasMaxLength(50);
 
+    builder.HasOne(c => c.CreatedByUser)
+      .WithMany()
+      .HasForeignKey(c => c.CreatedByUserId)
+      .OnDelete(DeleteBehavior.Restrict);
+
     builder.HasOne(c => c.ApprovedByUser)
       .WithMany()
       .HasForeignKey(c => c.ApprovedByUserId)

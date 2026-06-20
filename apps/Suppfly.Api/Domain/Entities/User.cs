@@ -10,7 +10,7 @@ public class User : BaseEntity
   public string FirstName { get; set; } = string.Empty;
   public string LastName { get; set; } = string.Empty;
   public GlobalRole? GlobalRole { get; set; }
-  public bool EmailVerified { get; set; }
+  public bool IsEmailVerified { get; set; }
   public bool IsActive { get; set; }
 
   public ICollection<CompanyUser> CompanyUsers { get; set; } = [];
@@ -31,7 +31,7 @@ public class User : BaseEntity
       FirstName = firstName,
       LastName = lastName,
       GlobalRole = null,
-      EmailVerified = false,
+      IsEmailVerified = false,
       IsActive = false
     };
   }
@@ -50,14 +50,14 @@ public class User : BaseEntity
       FirstName = firstName,
       LastName = lastName,
       GlobalRole = globalRole,
-      EmailVerified = true,
+      IsEmailVerified = true,
       IsActive = true
     };
   }
 
-  public void Accept()
+  public void VerifyEmail()
   {
-    EmailVerified = true;
+    IsEmailVerified = true;
     IsActive = true;
   }
 }
