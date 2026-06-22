@@ -46,6 +46,9 @@ public class TokenService : ITokenService
     return new JwtSecurityTokenHandler().WriteToken(token);
   }
 
+  /// <summary>Generate random string / byte</summary>
+  // TODO: Other uses JWT Token for Refresh Token 
+  // use redis to store RefreshToken if transitioning to JWT
   public string GenerateRefreshToken()
   {
     var bytes = new byte[64];
@@ -54,8 +57,26 @@ public class TokenService : ITokenService
     return Convert.ToBase64String(bytes);
   }
 
-  public ClaimsPrincipal? ValidateRefreshToken(string token)
+  /// <summary>
+  ///   hash refresh token using SHA256 / then convert it to hex string
+  /// </summary>
+  public string HashRefreshToken(string refreshToken)
   {
-    return null;
+    return Convert.ToHexString(
+      SHA256.HashData(
+        Encoding.UTF8.GetBytes(refreshToken)));
   }
+
+  /// <summary>
+  ///   validate hashed refresh token 
+  /// </summary>
+  // public bool ValidateRefreshToken(string token, string tokenHash)
+  // {
+  //   return BCrypt.Net.BCrypt.Verify(token, tokenHash);
+  // }
+
+  // public ClaimsPrincipal? ValidateRefreshToken(string token)
+  // {
+  //   return null;
+  // }
 }

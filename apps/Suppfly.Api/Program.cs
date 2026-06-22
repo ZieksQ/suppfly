@@ -4,7 +4,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Suppfly.Api.Domain.Enums;
+using Suppfly.Api.Infrastructure.CleanupService;
 using Suppfly.Api.Infrastructure.Persistence;
 using Suppfly.Api.Shared.Auth;
 using Suppfly.Api.Shared.Middleware;
@@ -21,6 +21,10 @@ var builder = WebApplication.CreateBuilder(args);
 //     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!));
 
 builder.AddAppInfrastructure();
+
+builder.Services.AddScoped<IRefreshTokenCleanupService, RefreshTokenCleanupService>();
+
+builder.Services.AddHostedService<TokenCleanupService>();
 
 builder.Services.AddMediatR(cfg =>
 {
