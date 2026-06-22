@@ -58,6 +58,16 @@ public class TokenService : ITokenService
   }
 
   /// <summary>
+  ///   hash refresh token using SHA256 / then convert it to hex string
+  /// </summary>
+  public string HashRefreshToken(string refreshToken)
+  {
+    return Convert.ToHexString(
+      SHA256.HashData(
+        Encoding.UTF8.GetBytes(refreshToken)));
+  }
+
+  /// <summary>
   ///   validate hashed refresh token 
   /// </summary>
   // public bool ValidateRefreshToken(string token, string tokenHash)

@@ -23,9 +23,7 @@ public class Handler : IRequestHandler<Command, Result<string>>
 
   public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)
   {
-    var incomingToken = Convert.ToHexString(
-      SHA256.HashData(
-        Encoding.UTF8.GetBytes(request.RefreshToken)));
+    var incomingToken = _tokenService.HashRefreshToken(request.RefreshToken);
 
     var refreshToken = await _context.RefreshTokens
       .Include(rt => rt.User)
