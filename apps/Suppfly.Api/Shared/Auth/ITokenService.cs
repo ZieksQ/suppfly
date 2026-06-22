@@ -7,5 +7,6 @@ public interface ITokenService
 {
   string GenerateAccessToken(Guid userId, GlobalRole? globalRole);
   string GenerateRefreshToken();
-  ClaimsPrincipal? ValidateRefreshToken(string token);
+  // bool ValidateRefrershToken(string token, string tokenHash);
+  // ClaimsPrincipal? ValidateRefreshToken(string token);
 }

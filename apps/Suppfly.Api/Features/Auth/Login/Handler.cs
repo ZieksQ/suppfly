@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Suppfly.Api.Domain.Entities;
@@ -48,12 +50,17 @@ public class Handler : IRequestHandler<Command, Result<Response>>
         user.GlobalRole);
 
     string refreshToken = _tokenService.GenerateRefreshToken();
-    string tokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken);
+
+    // NOTE: Its advisable to use SHA256 in hashing refreshTokens than bcrypt.
+    var tokenHash = SHA256.HashData(
+        Encoding.UTF8.GetBytes(refreshToken));
+
+    var tokenHashString = Convert.ToHexString(tokenHash);
 
     var newRefreshToken = new RefreshToken
     {
       UserId = user.Id,
-      TokenHash = tokenHash,
+      TokenHash = tokenHashString,
       ExpiresAt = DateTime.UtcNow.AddDays(7)
     };
 
