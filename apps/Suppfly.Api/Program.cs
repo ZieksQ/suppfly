@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Suppfly.Api.Infrastructure.CleanupService;
 using Suppfly.Api.Infrastructure.Persistence;
+using Suppfly.Api.Infrastructure.SeederService;
 using Suppfly.Api.Shared.Auth;
 using Suppfly.Api.Shared.Middleware;
 
@@ -21,6 +22,8 @@ var builder = WebApplication.CreateBuilder(args);
 //     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!));
 
 builder.AddAppInfrastructure();
+
+builder.Services.AddScoped<IDataSeeder, AdminSeeder>();
 
 builder.Services.AddScoped<IRefreshTokenCleanupService, RefreshTokenCleanupService>();
 
@@ -105,6 +108,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MigrateDb();
+await app.SeedData();
 app.MapCarter();
 app.UseHttpsRedirection();
 app.UseCors("NextJsPolicy");

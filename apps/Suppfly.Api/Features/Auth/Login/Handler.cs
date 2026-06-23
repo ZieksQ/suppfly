@@ -42,7 +42,7 @@ public class Handler : IRequestHandler<Command, Result<Response>>
     bool hasCompanyActive = user.CompanyUsers
       .Any(cu => cu.Company.Status == CompanyStatus.Active);
 
-    if (!hasCompanyActive)
+    if (!hasCompanyActive && user.GlobalRole is null)
       return Result<Response>.Fail("User and Company application is in progress.");
 
     bool passwordIsValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);

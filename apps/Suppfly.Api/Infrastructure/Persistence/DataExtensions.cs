@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using Suppfly.Api.Infrastructure.SeederService;
 
 namespace Suppfly.Api.Infrastructure.Persistence;
 
@@ -10,6 +11,21 @@ public static class DataExtensions
     var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
+  }
+
+  /// <summary>
+  ///   Seed data from IDataSeeder services.
+  /// </summary>
+  public static async Task SeedData(this WebApplication app)
+  {
+    using var scope = app.Services.CreateScope();
+    var seeders = scope.ServiceProvider
+      .GetServices<IDataSeeder>();
+
+    foreach (var seeder in seeders)
+    {
+      await seeder.SeedAsync();
+    }
   }
 
   public static void AddAppInfrastructure(this WebApplicationBuilder builder)
