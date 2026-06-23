@@ -60,6 +60,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       IssuerSigningKey = new SymmetricSecurityKey(key),
       ClockSkew = TimeSpan.Zero
     };
+
+    // Event triggered when JWT is recieved from the client to server
+    // expecting the token in HTTP header (Authorization: default)
+    options.Events = new JwtBearerEvents
+    {
+      OnMessageReceived = context =>
+      {
+        var accessToken = context.Request.Cookies["access_token"];
+        if (!string.IsNullOrWhiteSpace(accessToken))
+        {
+          context.Token = accessToken;
+        }
+        return Task.CompletedTask;
+      }
+    };
   });
 
 builder.Services.AddAuthorizationBuilder()
