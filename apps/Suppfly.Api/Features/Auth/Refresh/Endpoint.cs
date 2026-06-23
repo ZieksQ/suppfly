@@ -10,12 +10,18 @@ public class Endpoint : ICarterModule
   public void AddRoutes(IEndpointRouteBuilder app)
   {
     app.MapPost("/api/v1/auth/refresh", async (
-          Command command,
           ISender sender,
           HttpContext httpContext,
           IConfiguration config,
           CancellationToken cancellationToken) =>
     {
+      var refreshToken = httpContext.Request.Cookies["refresh_token"];
+
+      if (refreshToken is null)
+        return Results.Forbid();
+
+      var command = new Command(refreshToken);
+
       var result = await sender.Send(command, cancellationToken);
 
       if (result.IsFailure)
