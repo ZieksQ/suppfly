@@ -9,16 +9,21 @@ public sealed record Command(
 ) : IRequest<Result<Response>>;
 
 public sealed record Response(
-  string FirstName,
-  string LastName,
-  string Email,
-  string? GlobalRole,
-  IEnumerable<Companies> Companies
+  string AccessToken,
+  string RefreshToken
 );
 
-public sealed record Companies(
-  Guid CompanyId,
-  string CompanyName,
-  string Role,
-  DateTime JoinedAt
-);
+// public sealed record UserDto(
+//   string FirstName,
+//   string LastName,
+//   string Email,
+//   string? GlobalRole,
+//   IEnumerable<Companies> Companies
+// );
+//
+// public sealed record Companies(
+//   Guid CompanyId,
+//   string CompanyName,
+//   string Role,
+//   DateTime JoinedAt
+// );
