@@ -2,4 +2,7 @@
   <Folder Name="/apps/">
     <Project Path="apps/Suppfly.Api/Suppfly.Api.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Api.IntegrationTests/Api.IntegrationTests.csproj" />
+  </Folder>
 </Solution>

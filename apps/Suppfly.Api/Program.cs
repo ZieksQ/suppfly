@@ -9,6 +9,7 @@ using Suppfly.Api.Infrastructure.Persistence;
 using Suppfly.Api.Infrastructure.SeederService;
 using Suppfly.Api.Shared.Auth;
 using Suppfly.Api.Shared.Middleware;
+using Suppfly.Api.Shared.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,9 @@ builder.Services.AddScoped<IDataSeeder, AdminSeeder>();
 builder.Services.AddScoped<IRefreshTokenCleanupService, RefreshTokenCleanupService>();
 
 builder.Services.AddHostedService<TokenCleanupService>();
+
+// For Cookie Options
+builder.Services.AddSingleton<CookieOptionsFactory>();
 
 builder.Services.AddMediatR(cfg =>
 {
@@ -109,8 +113,13 @@ if (app.Environment.IsDevelopment())
 
 app.MigrateDb();
 await app.SeedData();
+
+if (!app.Environment.IsDevelopment())
+{
+  app.UseHttpsRedirection();
+}
+
 app.MapCarter();
-app.UseHttpsRedirection();
 app.UseCors("NextJsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();

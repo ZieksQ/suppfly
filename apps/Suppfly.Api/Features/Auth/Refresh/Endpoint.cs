@@ -13,12 +13,18 @@ public class Endpoint : ICarterModule
           ISender sender,
           HttpContext httpContext,
           IConfiguration config,
+          IHostEnvironment env,
           CancellationToken cancellationToken) =>
     {
       var refreshToken = httpContext.Request.Cookies["refresh_token"];
 
       if (refreshToken is null)
+      {
+        Console.WriteLine("No refresh token recieved.");
         return Results.Forbid();
+      }
+
+      Console.WriteLine("Refresh Token recieved");
 
       var command = new Command(refreshToken);
 
@@ -26,6 +32,7 @@ public class Endpoint : ICarterModule
 
       if (result.IsFailure)
       {
+        Console.WriteLine(result.Error);
         return Results.Forbid();
       }
 
@@ -35,6 +42,7 @@ public class Endpoint : ICarterModule
           "access_token",
           result.Value!,
           CookieOptionsFactory.AccessToken(
+            env,
             int.Parse(jwtOptions["AccessTokenExpiryMinutes"]!)));
 
       return Results.Ok(new BaseResponse(

@@ -1,0 +1,45 @@
+using Api.IntegrationTests.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Suppfly.Api.Infrastructure.SeederService;
+
+namespace Api.IntegrationTests.Shared;
+
+public class IntegrationTestFixture : IAsyncLifetime
+{
+  private readonly PostgreSqlContainer _postgres = new();
+
+  public HttpClient Client { get; private set; } = default!;
+
+  public CustomWebApplicationFactory Factory { get; private set; } = default!;
+
+  public async Task DisposeAsync()
+  {
+    Client.Dispose();
+
+    Factory.Dispose();
+
+    await _postgres.DisposeAsync();
+  }
+
+  public async Task InitializeAsync()
+  {
+    await _postgres.InitializeAsync();
+
+    Factory = new CustomWebApplicationFactory(_postgres.ConnectionString());
+
+    Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
+    {
+      AllowAutoRedirect = false,
+      HandleCookies = true
+    });
+
+    using var scope = Factory.Services.CreateScope();
+
+    var seeder = scope.ServiceProvider
+      .GetRequiredService<IDataSeeder>();
+
+    await seeder.SeedAsync();
+  }
+}
