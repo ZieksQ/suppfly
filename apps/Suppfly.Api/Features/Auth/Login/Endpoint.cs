@@ -15,6 +15,7 @@ public class Endpoint : ICarterModule
       ISender sender,
       HttpContext httpContext,
       IConfiguration config,
+      IHostEnvironment env,
       CancellationToken cancellationToken) =>
     {
       var result = await sender.Send(command, cancellationToken);
@@ -24,19 +25,29 @@ public class Endpoint : ICarterModule
       // store access and refresh token in httpOnly Cookies
       if (result.IsFailure)
       {
-        return Results.BadRequest(result.ToResponse());
+        // return Results.Unauthorized();
+        //
+        // return Results.Problem(
+        //     title: "Authentication Failed.",
+        //     detail: result.Error,
+        //     statusCode: StatusCodes.Status401Unauthorized);
+        return TypedResults.Json(
+            result.ToResponse("Authentication Failed."),
+            statusCode: StatusCodes.Status401Unauthorized);
       }
 
       httpContext.Response.Cookies.Append(
         "access_token",
         result.Value!.AccessToken,
         CookieOptionsFactory.AccessToken(
+          env,
           int.Parse(jwtOptions["AccessTokenExpiryMinutes"]!)));
 
       httpContext.Response.Cookies.Append(
         "refresh_token",
         result.Value!.RefreshToken,
         CookieOptionsFactory.RefreshToken(
+          env,
           int.Parse(jwtOptions["RefreshTokenExpiryDays"]!)));
 
       // TODO: Add HATEOAS for links like /me

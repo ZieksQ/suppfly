@@ -3,20 +3,21 @@ namespace Suppfly.Api.Shared.Utils;
 /// <summary>
 ///   Default Cookie Options for Auth Tokens
 /// </summary>
-public class CookieOptionsFactory
+public sealed class CookieOptionsFactory
 {
   /// <summary>
   ///   returns cookie options configured for access token  
   /// </summary>
-  /// <param name="expiryMinutes">Expiration time in minutes. Defaults to 30.</param>
+  /// <param name="env">System Environment. Secure is true if not in Testing Environment.</param>
+  /// <param name="expiryMinutes">Expiration time in minutes. Defaults to 15.</param>
   /// <returns>A <see cref="CookieOptions" />object for the access token.</returns>
-  public static CookieOptions AccessToken(int expiryMinutes = 30)
+  public static CookieOptions AccessToken(IHostEnvironment env, int expiryMinutes = 15)
   {
     return new CookieOptions
     {
       HttpOnly = true,
-      Secure = true,
-      SameSite = SameSiteMode.Strict,
+      Secure = !env.IsEnvironment("Testing"),
+      SameSite = SameSiteMode.Lax,
       Expires = DateTimeOffset.UtcNow.AddMinutes(expiryMinutes)
     };
   }
@@ -24,15 +25,16 @@ public class CookieOptionsFactory
   /// <summary>
   ///   returns cookie options configured for refresh token 
   /// </summary>
+  /// <param name="env">System Environment. Secure is true if not in Testing Environment.</param>
   /// <param name="expiryDays">Expiration time in minutes. Defaults to 7.</param>
   /// <returns>A <see cref="CookieOptions" />object for the refresh token.</returns>
-  public static CookieOptions RefreshToken(int expiryDays = 7)
+  public static CookieOptions RefreshToken(IHostEnvironment env, int expiryDays = 7)
   {
     return new CookieOptions
     {
       HttpOnly = true,
-      Secure = true,
-      SameSite = SameSiteMode.Strict,
+      Secure = !env.IsEnvironment("Testing"),
+      SameSite = SameSiteMode.Lax,
       Expires = DateTimeOffset.UtcNow.AddDays(expiryDays)
     };
   }
