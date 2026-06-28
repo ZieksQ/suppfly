@@ -10,14 +10,20 @@ public class IntegrationTestFixture : IAsyncLifetime
 {
   private readonly PostgreSqlContainer _postgres = new();
 
-  public HttpClient Client { get; private set; } = default!;
 
   public CustomWebApplicationFactory Factory { get; private set; } = default!;
 
+  public HttpClient CreateClient()
+  {
+    return Factory.CreateClient(new WebApplicationFactoryClientOptions
+    {
+      AllowAutoRedirect = false,
+      HandleCookies = true
+    });
+  }
+
   public async Task DisposeAsync()
   {
-    Client.Dispose();
-
     Factory.Dispose();
 
     await _postgres.DisposeAsync();
@@ -29,13 +35,11 @@ public class IntegrationTestFixture : IAsyncLifetime
 
     Factory = new CustomWebApplicationFactory(_postgres.ConnectionString());
 
-    Client = Factory.CreateClient(new WebApplicationFactoryClientOptions
-    {
-      AllowAutoRedirect = false,
-      HandleCookies = true
-    });
-
     using var scope = Factory.Services.CreateScope();
+
+    var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+
+    Console.WriteLine(env.EnvironmentName);
 
     var seeder = scope.ServiceProvider
       .GetRequiredService<IDataSeeder>();

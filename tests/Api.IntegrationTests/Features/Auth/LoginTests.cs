@@ -8,23 +8,25 @@ namespace Api.IntegrationTests.Features.Auth;
 [Collection("IntegrationTests")]
 public class LoginTests
 {
-  private readonly HttpClient _client;
+  private readonly IntegrationTestFixture _fixture;
 
   public LoginTests(IntegrationTestFixture fixture)
   {
-    _client = fixture.Client;
+    _fixture = fixture;
   }
 
   [Fact]
   public async Task Login_Should_Return_Unauthorized_When_Invalid()
   {
+    var client = _fixture.CreateClient();
+
     var request = new
     {
       Email = "wrong@test.com",
       Password = "wrong"
     };
 
-    var response = await _client.PostAsJsonAsync(
+    var response = await client.PostAsJsonAsync(
         "/api/v1/auth/login",
         request);
 
@@ -35,13 +37,15 @@ public class LoginTests
   [Fact]
   public async Task Login_Should_Be_Authenticated_When_Valid()
   {
+    var client = _fixture.CreateClient();
+
     var request = new
     {
       Email = "admin@email.com",
       Password = "Admin123"
     };
 
-    var response = await _client.PostAsJsonAsync(
+    var response = await client.PostAsJsonAsync(
         "/api/v1/auth/login",
         request);
 
