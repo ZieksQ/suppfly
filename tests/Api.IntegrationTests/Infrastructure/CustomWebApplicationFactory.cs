@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 using Suppfly.Api.Infrastructure.Persistence;
@@ -24,6 +25,15 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
   {
     builder.UseEnvironment("Testing");
 
+    builder.ConfigureAppConfiguration((context, config) =>
+    {
+      config.AddInMemoryCollection(new Dictionary<string, string?>
+      {
+        ["ConnectionString:Postgres"] = _pgsqlConnectionString,
+        ["ConnectionString:Redis"] = _redisConnectionString
+      });
+    });
+
     builder.ConfigureServices(services =>
     {
       // Remove existing DbContext registration
@@ -37,16 +47,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
       {
         options.UseNpgsql(_pgsqlConnectionString);
       });
-
-      // Redis desciptor
-      var redisDescriptor = services
-      .SingleOrDefault(d => d.ServiceType == typeof(IConnectionMultiplexer));
-
-      if (redisDescriptor is not null)
-        services.Remove(redisDescriptor);
-
-      services.AddSingleton<IConnectionMultiplexer>(_ =>
-          ConnectionMultiplexer.Connect(_redisConnectionString));
 
       var sp = services.BuildServiceProvider();
 

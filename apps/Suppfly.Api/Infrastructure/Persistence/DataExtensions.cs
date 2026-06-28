@@ -37,10 +37,12 @@ public static class DataExtensions
         options.UseNpgsql(postgresConnString)
           .UseSnakeCaseNamingConvention()); // Added Snake Case from EfCore.NamingConvention package
 
-    var redisConnString = builder.Configuration.GetConnectionString("Redis")
-      ?? throw new InvalidOperationException("Redis Connection string does not exists.");
+    builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
+    {
+      var redisConnString = builder.Configuration.GetConnectionString("Redis")
+        ?? throw new InvalidOperationException("Redis Connection string does not exists.");
 
-    builder.Services.AddSingleton<IConnectionMultiplexer>(
-        ConnectionMultiplexer.Connect(redisConnString));
+      return ConnectionMultiplexer.Connect(redisConnString);
+    });
   }
 }
