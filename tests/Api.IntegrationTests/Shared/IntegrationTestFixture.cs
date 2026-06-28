@@ -9,7 +9,7 @@ namespace Api.IntegrationTests.Shared;
 public class IntegrationTestFixture : IAsyncLifetime
 {
   private readonly PostgreSqlContainer _postgres = new();
-
+  private readonly RedisContainer _redis = new();
 
   public CustomWebApplicationFactory Factory { get; private set; } = default!;
 
@@ -27,13 +27,17 @@ public class IntegrationTestFixture : IAsyncLifetime
     Factory.Dispose();
 
     await _postgres.DisposeAsync();
+    await _redis.DisposeAsync();
   }
 
   public async Task InitializeAsync()
   {
     await _postgres.InitializeAsync();
+    await _redis.InitializeAsync();
 
-    Factory = new CustomWebApplicationFactory(_postgres.ConnectionString());
+    Factory = new CustomWebApplicationFactory(
+        _postgres.ConnectionString(),
+        _redis.ConnectionString());
 
     using var scope = Factory.Services.CreateScope();
 
