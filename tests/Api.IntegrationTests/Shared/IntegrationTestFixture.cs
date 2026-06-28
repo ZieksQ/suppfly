@@ -37,10 +37,6 @@ public class IntegrationTestFixture : IAsyncLifetime
 
     using var scope = Factory.Services.CreateScope();
 
-    var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-
-    Console.WriteLine(env.EnvironmentName);
-
     var seeder = scope.ServiceProvider
       .GetRequiredService<IDataSeeder>();
 

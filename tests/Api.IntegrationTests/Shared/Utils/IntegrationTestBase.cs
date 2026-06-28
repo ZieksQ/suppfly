@@ -11,10 +11,10 @@ public class IntegrationTestBase
   protected IntegrationTestBase(IntegrationTestFixture fixture)
   {
     Factory = fixture.Factory;
-    Client = Factory.CreateClient();
+    Client = fixture.CreateClient();
   }
 
-  protected async Task LoginAsAdminAsync()
+  protected async Task<HttpResponseMessage> LoginAsAdminAsync()
   {
     var request = new
     {
@@ -28,16 +28,18 @@ public class IntegrationTestBase
 
     response.EnsureSuccessStatusCode();
 
-    if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
-    {
-      foreach (var cookie in cookies)
-      {
-        Console.WriteLine(cookie);
-      }
-    }
-    else
-    {
-      Console.WriteLine("No Set-Cookie header returned.");
-    }
+    return response;
+
+    // if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
+    // {
+    //   foreach (var cookie in cookies)
+    //   {
+    //     Console.WriteLine(cookie);
+    //   }
+    // }
+    // else
+    // {
+    //   Console.WriteLine("No Set-Cookie header returned.");
+    // }
   }
 }

@@ -20,11 +20,8 @@ public class Endpoint : ICarterModule
 
       if (refreshToken is null)
       {
-        Console.WriteLine("No refresh token recieved.");
         return Results.Forbid();
       }
-
-      Console.WriteLine("Refresh Token recieved");
 
       var command = new Command(refreshToken);
 
@@ -32,7 +29,6 @@ public class Endpoint : ICarterModule
 
       if (result.IsFailure)
       {
-        Console.WriteLine(result.Error);
         return Results.Forbid();
       }
 
